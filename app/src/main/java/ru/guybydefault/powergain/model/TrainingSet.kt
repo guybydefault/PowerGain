@@ -12,6 +12,10 @@ data class TrainingSet(
     val rest: Int?
 
 ) {
+
+    val volume : Double
+        get() = weight * repetitions
+
     fun multiply(times: Int): List<TrainingSet> {
         val list = mutableListOf<TrainingSet>()
         for (i in 0..times) {

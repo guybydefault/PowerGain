@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.commit
@@ -43,8 +44,10 @@ class ExerciseTypeListFragment : Fragment() {
     ): View? {
         binding = FragmentExercisesTypesListBinding.inflate(inflater, container, false)
         binding!!.trainingTypesRecyclerView.apply {
+            setHasFixedSize(true)
             adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
+
         }
         binding!!.searchExercisesEditText.afterTextChanged {
             viewModel.searchExercises(it)
@@ -69,8 +72,7 @@ class ExerciseTypeListFragment : Fragment() {
         var exerciseTypeInfo: List<ExerciseTypeInfo> = mutableListOf()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseTypeViewHolder {
-            val binding =
-                ExerciseTypeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = ExerciseTypeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ExerciseTypeViewHolder(
                 binding.root,
                 binding.exerciseNameTextview,

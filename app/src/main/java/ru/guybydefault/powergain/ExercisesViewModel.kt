@@ -20,8 +20,6 @@ class ExercisesViewModel(val dataRepository: DataRepository) : ViewModel() {
     }
 
     fun searchExercises(str: String) {
-        exercises.postValue(dataRepository.trainExercisesTypes.filter { exerciseTypeInfo: ExerciseTypeInfo ->
-            exerciseTypeInfo.exerciseType.name.startsWith(str)
-        })
+        exercises.postValue(dataRepository.searchTypesByStr(str))
     }
 }
