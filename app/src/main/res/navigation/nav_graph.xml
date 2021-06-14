@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ExerciseTypeListFragment">
+
+    <fragment
+        android:id="@+id/ExerciseTypeListFragment"
+        android:name="ru.guybydefault.powergain.ExerciseTypeListFragment"
+        android:label="Упражнения"
+        tools:layout="@layout/fragment_exercises_types_list">
+
+        <action
+            android:id="@+id/action_types_to_trainings"
+            app:destination="@id/ExerciseTrainingsFragment" />
+        <action
+            android:id="@+id/action_types_to_charts"
+            app:destination="@id/ChartFragment" />
+        <action
+            android:id="@+id/action_types_to_add_exercise"
+            app:destination="@id/AddExerciseFragment" />
+        <action
+            android:id="@+id/action_types_to_create_exercise_type"
+            app:destination="@id/CreateTrainingTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ExerciseTrainingsFragment"
+        android:name="ru.guybydefault.powergain.ExerciseTrainingsFragment"
+        android:label="Trainings"
+        tools:layout="@layout/fragment_exercise_trainings">
+
+        <action
+            android:id="@+id/action_exercise_trainings_to_types"
+            app:destination="@id/ExerciseTypeListFragment" />
+        <argument
+            android:name="exerciseTypeId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/ChartFragment"
+        android:name="ru.guybydefault.powergain.ChartFragment"
+        android:label="Charts"
+        tools:layout="@layout/fragment_chart">
+        <argument
+            android:name="exerciseTypeId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddExerciseFragment"
+        android:name="ru.guybydefault.powergain.AddExerciseFragment"
+        android:label="Add Exercise"
+        tools:layout="@layout/fragment_add_exercise">
+        <argument
+            android:name="exerciseTypeId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/CreateTrainingTypeFragment"
+        android:name="ru.guybydefault.powergain.CreateExerciseTypeFragment"
+        android:label="Create Exercise Type"
+        tools:layout="@layout/fragment_create_exercise_type" />
+</navigation>
