@@ -7,30 +7,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.guybydefault.powergain.databinding.FragmentExerciseTrainingsBinding
+import ru.guybydefault.powergain.databinding.TrainingCardViewBinding
 
-import ru.guybydefault.powergain.model.ExerciseTypeInfo
+import ru.guybydefault.powergain.model.TrainingExercise
+import ru.guybydefault.powergain.serializer.TrainingExerciseSerializer
 
 class ExerciseTrainingsFragment() : Fragment() {
 
-    private var binding: FragmentExerciseTrainingsBinding? = null
-    private lateinit var viewModel: ExercisesViewModel
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerViewAdapter: TrainingViewHolderAdapter
+    private lateinit var binding: FragmentExerciseTrainingsBinding
+    private lateinit var viewModel: TrainingsViewModel
+    private lateinit var adapter: TrainingViewHolderAdapter
+
+    private val args: ExerciseTrainingsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adapter = TrainingViewHolderAdapter()
         viewModel =
-            (requireActivity().application as PowerGainApplication).powerGainContainer.exercisesViewModel
-        recyclerViewAdapter = TrainingViewHolderAdapter()
-        viewModel.exercises.observe(this, object : Observer<List<ExerciseTypeInfo>> {
-            override fun onChanged(t: List<ExerciseTypeInfo>?) {
-//                recyclerViewAdapter.exerciseTypeInfo = t!!
-                recyclerViewAdapter.notifyDataSetChanged()
-            }
-        })
+            (requireActivity().application as PowerGainApplication).container.trainingsViewModel
+        viewModel.exerciseTypeId = args.exerciseTypeId
+        viewModel.exercises.observe(this) { trainings ->
+            adapter.exercises = trainings
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateView(
@@ -38,51 +42,50 @@ class ExerciseTrainingsFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExerciseTrainingsBinding.inflate(inflater, container, false)
-//        binding!!.trainingTypesRecyclerView.apply {
-//            adapter = recyclerViewAdapter
-//            layoutManager = LinearLayoutManager(requireContext())
-//        }
-//        binding!!.searchExercisesEditText.afterTextChanged {
-//            viewModel.searchExercises(it)
-//        }
-        return binding!!.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        binding!!.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        binding.trainingsRecyclerView.apply {
+            setHasFixedSize(true)
+            adapter = this@ExerciseTrainingsFragment.adapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        binding.fab.setOnClickListener {
+            val action =
+                ExerciseTrainingsFragmentDirections.actionTrainingsToCreateTraining(args.exerciseTypeId)
+            findNavController().navigate(action)
+        }
+        return binding.root
     }
 
     class TrainingViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {
 
-//        var exerciseTypeInfo: List<ExerciseTypeInfo> = mutableListOf()
+        var exercises: List<TrainingExercise> = mutableListOf()
+        val serializer = TrainingExerciseSerializer()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseTypeViewHolder {
-            val cardView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.exercise_type_card, parent, false) as CardView
-//            val exerciseNameTextView = cardView.findViewById<TextView>(R.id.exercise_name_textview)
-            return ExerciseTypeViewHolder(cardView)
+            val binding =
+                TrainingCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ExerciseTypeViewHolder(
+                binding.root,
+                binding.trainingDate,
+                binding.trainingDesc
+            )
         }
 
         override fun onBindViewHolder(holder: ExerciseTypeViewHolder, position: Int) {
-
+            val training = exercises[position]
+            holder.date.text = training.date.toString()
+            holder.trainingDesc.text = serializer.serialize(training)
         }
 
         override fun getItemCount(): Int {
-            return 0
+            return exercises.size
         }
 
     }
 
     class ExerciseTypeViewHolder(
         val cardView: CardView,
+        val date: TextView,
+        val trainingDesc: TextView
     ) : RecyclerView.ViewHolder(cardView) {
 
     }

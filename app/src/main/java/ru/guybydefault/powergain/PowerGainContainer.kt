@@ -8,4 +8,5 @@ class PowerGainContainer(val application: PowerGainApplication) {
     }
 
     val exercisesViewModel = ExercisesViewModel(dataRepository)
+    val trainingsViewModel = TrainingsViewModel(dataRepository)
 }

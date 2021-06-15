@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,7 @@ import ru.guybydefault.powergain.model.ExerciseTypeInfo
 
 class ExerciseTypeListFragment : Fragment() {
 
-    private var binding: FragmentExercisesTypesListBinding? = null
+    private lateinit var binding: FragmentExercisesTypesListBinding
     private lateinit var viewModel: ExercisesViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: ExerciseTypeToViewHolderAdapter
@@ -28,7 +26,7 @@ class ExerciseTypeListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel =
-            (requireActivity().application as PowerGainApplication).powerGainContainer.exercisesViewModel
+            (requireActivity().application as PowerGainApplication).container.exercisesViewModel
         recyclerViewAdapter = ExerciseTypeToViewHolderAdapter()
         viewModel.exercises.observe(this, object : Observer<List<ExerciseTypeInfo>> {
             override fun onChanged(t: List<ExerciseTypeInfo>?) {
@@ -41,30 +39,20 @@ class ExerciseTypeListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExercisesTypesListBinding.inflate(inflater, container, false)
-        binding!!.trainingTypesRecyclerView.apply {
+        binding.trainingTypesRecyclerView.apply {
             setHasFixedSize(true)
             adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
-
         }
-        binding!!.searchExercisesEditText.afterTextChanged {
+        binding.searchExercisesEditText.afterTextChanged {
             viewModel.searchExercises(it)
         }
-        binding!!.fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_types_to_create_exercise_type)
         }
-        return binding!!.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        return binding.root
     }
 
     inner class ExerciseTypeToViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {
@@ -96,7 +84,7 @@ class ExerciseTypeListFragment : Fragment() {
                     findNavController().navigate(action)
                 }
                 addExerciseBtn.setOnClickListener {
-                    val action = ExerciseTypeListFragmentDirections.actionTypesToAddExercise(typeId)
+                    val action = ExerciseTypeListFragmentDirections.actionTypesToCreateTraining(typeId)
                     findNavController().navigate(action)
                 }
             }

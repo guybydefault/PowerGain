@@ -149,10 +149,10 @@ class Parser(bufferedReader: BufferedReader) {
 
                     for ((index, param_delimiter) in SET_PARAM_DELIMITERS.withIndex()) {
                         if (currToken!!.split(param_delimiter).size > 1) {
-                            val sets = currToken!!.split(param_delimiter)[0].toInt()
+                            val setsCount = currToken!!.split(param_delimiter)[0].toInt()
                             val reps = currToken!!.split(param_delimiter)[1].toInt()
 
-                            for (i in 0..sets) {
+                            for (i in 0 until setsCount) {
                                 trainingSets.add(TrainingSet(weight, reps, null))
                             }
 

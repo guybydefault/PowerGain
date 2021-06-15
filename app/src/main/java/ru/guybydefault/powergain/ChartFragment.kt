@@ -19,7 +19,7 @@ import kotlin.random.Random
 class ChartFragment : Fragment() {
 
     private lateinit var binding: FragmentChartBinding
-    val args: ChartFragmentArgs by navArgs<ChartFragmentArgs>()
+    private val args: ChartFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class ChartFragment : Fragment() {
     ): View? {
         binding = FragmentChartBinding.inflate(inflater, container, false)
         val exercises =
-            (requireActivity().application as PowerGainApplication).powerGainContainer.dataRepository.getTrainingsByType(args.exerciseTypeId)
+            (requireActivity().application as PowerGainApplication).container.dataRepository.getTrainingsByType(args.exerciseTypeId)
         setupCombinedChart(
             binding.combinedChart,
             exercises

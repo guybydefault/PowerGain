@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/ExerciseTypeListFragment"
         android:name="ru.guybydefault.powergain.ExerciseTypeListFragment"
-        android:label="Упражнения"
+        android:label="@string/fragment_name_exercise_types"
         tools:layout="@layout/fragment_exercises_types_list">
 
         <action
@@ -18,21 +18,21 @@
             android:id="@+id/action_types_to_charts"
             app:destination="@id/ChartFragment" />
         <action
-            android:id="@+id/action_types_to_add_exercise"
-            app:destination="@id/AddExerciseFragment" />
-        <action
             android:id="@+id/action_types_to_create_exercise_type"
-            app:destination="@id/CreateTrainingTypeFragment" />
+            app:destination="@id/CreateExerciseTypeFragment" />
+        <action
+            android:id="@+id/action_types_to_create_training"
+            app:destination="@id/CreateTrainingFragment" />
     </fragment>
     <fragment
         android:id="@+id/ExerciseTrainingsFragment"
         android:name="ru.guybydefault.powergain.ExerciseTrainingsFragment"
-        android:label="Trainings"
+        android:label="@string/fragment_name_trainings"
         tools:layout="@layout/fragment_exercise_trainings">
 
         <action
-            android:id="@+id/action_exercise_trainings_to_types"
-            app:destination="@id/ExerciseTypeListFragment" />
+            android:id="@+id/action_trainings_to_create_training"
+            app:destination="@id/CreateTrainingFragment" />
         <argument
             android:name="exerciseTypeId"
             app:argType="integer" />
@@ -40,24 +40,28 @@
     <fragment
         android:id="@+id/ChartFragment"
         android:name="ru.guybydefault.powergain.ChartFragment"
-        android:label="Charts"
+        android:label="@string/fragment_name_progress"
         tools:layout="@layout/fragment_chart">
         <argument
             android:name="exerciseTypeId"
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/AddExerciseFragment"
-        android:name="ru.guybydefault.powergain.AddExerciseFragment"
-        android:label="Add Exercise"
-        tools:layout="@layout/fragment_add_exercise">
+        android:id="@+id/CreateExerciseTypeFragment"
+        android:name="ru.guybydefault.powergain.CreateExerciseTypeFragment"
+        android:label="@string/fragment_name_create_exercise_type"
+        tools:layout="@layout/fragment_create_exercise_type">
         <argument
             android:name="exerciseTypeId"
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/CreateTrainingTypeFragment"
-        android:name="ru.guybydefault.powergain.CreateExerciseTypeFragment"
-        android:label="Create Exercise Type"
-        tools:layout="@layout/fragment_create_exercise_type" />
+        android:id="@+id/CreateTrainingFragment"
+        android:name="ru.guybydefault.powergain.CreateTrainingFragment"
+        android:label="@string/fragment_name_create_training"
+        tools:layout="@layout/fragment_create_training">
+        <argument
+            android:name="exerciseTypeId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

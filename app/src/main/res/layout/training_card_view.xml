@@ -3,38 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="@android:color/background_light"
-    app:cardElevation="8dp"
-    app:contentPadding="8dp">
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="5dp">
 
         <TextView
-            android:id="@+id/exercise_name_textview"
+            android:id="@+id/training_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/max_weight_textview"
+            android:id="@+id/training_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Рекорд: 70кг 5х5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/exercise_name_textview" />
-
-        <TextView
-            android:id="@+id/one_rep_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1ПМ (расчетный): 85кг"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/max_weight_textview" />
+            app:layout_constraintStart_toStartOf="@id/training_date"
+            app:layout_constraintTop_toBottomOf="@id/training_date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
