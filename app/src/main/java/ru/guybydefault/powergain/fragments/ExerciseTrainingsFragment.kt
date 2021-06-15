@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.guybydefault.powergain.PowerGainApplication
+import ru.guybydefault.powergain.R
 import ru.guybydefault.powergain.viewmodel.TrainingsViewModel
 import ru.guybydefault.powergain.databinding.FragmentExerciseTrainingsBinding
 import ru.guybydefault.powergain.databinding.TrainingCardViewBinding
@@ -35,6 +36,7 @@ class ExerciseTrainingsFragment() : Fragment() {
         viewModel.exerciseTypeId = args.exerciseTypeId
         viewModel.exercises.observe(this) { trainings ->
             adapter.exercises = trainings
+            updateTrainingsCount(trainings.size)
             adapter.notifyDataSetChanged()
         }
     }
@@ -54,7 +56,17 @@ class ExerciseTrainingsFragment() : Fragment() {
                 ExerciseTrainingsFragmentDirections.actionTrainingsToCreateTraining(args.exerciseTypeId)
             findNavController().navigate(action)
         }
+        binding.chartBtn.setOnClickListener {
+            val action =
+                ExerciseTrainingsFragmentDirections.actionTrainingsToChart(args.exerciseTypeId)
+            findNavController().navigate(action)
+        }
         return binding.root
+    }
+
+    private fun updateTrainingsCount(size: Int) {
+        binding.exerciseCount.text =
+            "${resources.getString(R.string.fragment_trainings_count)} ${size}"
     }
 
     class TrainingViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {

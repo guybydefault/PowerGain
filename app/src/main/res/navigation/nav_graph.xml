@@ -30,12 +30,15 @@
         android:label="@string/fragment_name_trainings"
         tools:layout="@layout/fragment_exercise_trainings">
 
-        <action
-            android:id="@+id/action_trainings_to_create_training"
-            app:destination="@id/CreateTrainingFragment" />
         <argument
             android:name="exerciseTypeId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_trainings_to_create_training"
+            app:destination="@id/CreateTrainingFragment" />
+        <action
+            android:id="@+id/action_trainings_to_chart"
+            app:destination="@id/ChartFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChartFragment"

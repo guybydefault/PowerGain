@@ -7,4 +7,5 @@
     <string name="fragment_name_exercise_types">Упражнения</string>
     <string name="fragment_name_create_exercise_type">Добавить упражнение</string>
     <string name="fragment_name_create_training">Добавить тренировку</string>
+    <string name="fragment_trainings_count">Количество тренировок:</string>
 </resources>
