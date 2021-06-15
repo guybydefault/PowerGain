@@ -1,10 +1,9 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.repository.DataRepository
-import kotlin.properties.Delegates
 
 class TrainingsViewModel(val dataRepository: DataRepository) :
     ViewModel() {

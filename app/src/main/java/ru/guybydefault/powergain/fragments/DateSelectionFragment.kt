@@ -1,4 +1,4 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
+import ru.guybydefault.powergain.R
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.

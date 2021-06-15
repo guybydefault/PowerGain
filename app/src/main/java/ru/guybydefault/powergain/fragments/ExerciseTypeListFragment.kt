@@ -1,4 +1,4 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,6 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.guybydefault.powergain.viewmodel.ExercisesViewModel
+import ru.guybydefault.powergain.PowerGainApplication
+import ru.guybydefault.powergain.R
+import ru.guybydefault.powergain.afterTextChanged
 import ru.guybydefault.powergain.databinding.ExerciseTypeCardBinding
 import ru.guybydefault.powergain.databinding.FragmentExercisesTypesListBinding
 import ru.guybydefault.powergain.model.ExerciseTypeInfo

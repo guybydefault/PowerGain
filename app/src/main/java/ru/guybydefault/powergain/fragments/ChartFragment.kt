@@ -1,4 +1,4 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import ru.guybydefault.powergain.PowerGainApplication
 import ru.guybydefault.powergain.databinding.FragmentChartBinding
 import ru.guybydefault.powergain.model.TrainingExercise
 import kotlin.random.Random

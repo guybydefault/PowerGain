@@ -1,4 +1,4 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.fragments
 
 import androidx.fragment.app.Fragment
 

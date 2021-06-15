@@ -1,4 +1,4 @@
-package ru.guybydefault.powergain
+package ru.guybydefault.powergain.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/ExerciseTypeListFragment"
-        android:name="ru.guybydefault.powergain.ExerciseTypeListFragment"
+        android:name="ru.guybydefault.powergain.fragments.ExerciseTypeListFragment"
         android:label="@string/fragment_name_exercise_types"
         tools:layout="@layout/fragment_exercises_types_list">
 
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/ExerciseTrainingsFragment"
-        android:name="ru.guybydefault.powergain.ExerciseTrainingsFragment"
+        android:name="ru.guybydefault.powergain.fragments.ExerciseTrainingsFragment"
         android:label="@string/fragment_name_trainings"
         tools:layout="@layout/fragment_exercise_trainings">
 
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/ChartFragment"
-        android:name="ru.guybydefault.powergain.ChartFragment"
+        android:name="ru.guybydefault.powergain.fragments.ChartFragment"
         android:label="@string/fragment_name_progress"
         tools:layout="@layout/fragment_chart">
         <argument
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/CreateExerciseTypeFragment"
-        android:name="ru.guybydefault.powergain.CreateExerciseTypeFragment"
+        android:name="ru.guybydefault.powergain.fragments.CreateExerciseTypeFragment"
         android:label="@string/fragment_name_create_exercise_type"
         tools:layout="@layout/fragment_create_exercise_type">
         <argument
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/CreateTrainingFragment"
-        android:name="ru.guybydefault.powergain.CreateTrainingFragment"
+        android:name="ru.guybydefault.powergain.fragments.CreateTrainingFragment"
         android:label="@string/fragment_name_create_training"
         tools:layout="@layout/fragment_create_training">
         <argument
