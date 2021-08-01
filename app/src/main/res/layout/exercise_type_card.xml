@@ -29,7 +29,7 @@
             app:layout_constraintTop_toBottomOf="@id/exercise_name_textview" />
 
         <TextView
-            android:id="@+id/one_rep_textview"
+            android:id="@+id/one_rep_max_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1ПМ (расчетный): 85кг"

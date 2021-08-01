@@ -4,6 +4,8 @@ import ru.guybydefault.powergain.model.ExerciseType
 import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.model.TrainingSet
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 import java.lang.Exception
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
@@ -12,7 +14,7 @@ import java.time.LocalDate
 import java.util.regex.Pattern
 import kotlin.properties.Delegates
 
-class Parser(bufferedReader: BufferedReader) {
+class Parser(file: File) {
     private val input: String
     private var currToken: String? = null
     private var currPos = 0
@@ -36,7 +38,11 @@ class Parser(bufferedReader: BufferedReader) {
     }
 
     init {
-        input = bufferedReader.readLines().joinToString()
+        val bis = BufferedReader(FileReader(file))
+
+        bis.use {
+            input = bis.readLines().joinToString()
+        }
     }
 
     enum class TokenType {
@@ -153,7 +159,7 @@ class Parser(bufferedReader: BufferedReader) {
                             val reps = currToken!!.split(param_delimiter)[1].toInt()
 
                             for (i in 0 until setsCount) {
-                                trainingSets.add(TrainingSet(weight, reps, null))
+                                trainingSets.add(TrainingSet(weight, reps))
                             }
 
                             break

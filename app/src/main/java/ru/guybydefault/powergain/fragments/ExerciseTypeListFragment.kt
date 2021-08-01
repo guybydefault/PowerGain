@@ -12,13 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.guybydefault.powergain.*
 import ru.guybydefault.powergain.viewmodel.ExercisesViewModel
-import ru.guybydefault.powergain.PowerGainApplication
-import ru.guybydefault.powergain.R
-import ru.guybydefault.powergain.afterTextChanged
 import ru.guybydefault.powergain.databinding.ExerciseTypeCardBinding
 import ru.guybydefault.powergain.databinding.FragmentExercisesTypesListBinding
 import ru.guybydefault.powergain.model.ExerciseTypeInfo
+import ru.guybydefault.powergain.calculation.BasicOneRepMaxCalculator
 
 class ExerciseTypeListFragment : Fragment() {
 
@@ -64,10 +63,13 @@ class ExerciseTypeListFragment : Fragment() {
         var exerciseTypeInfo: List<ExerciseTypeInfo> = mutableListOf()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseTypeViewHolder {
-            val binding = ExerciseTypeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding =
+                ExerciseTypeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ExerciseTypeViewHolder(
                 binding.root,
                 binding.exerciseNameTextview,
+                binding.maxWeightTextview,
+                binding.oneRepMaxTextView,
                 binding.chartBtn,
                 binding.exerciseOverviewBtn,
                 binding.addExerciseBtn
@@ -75,10 +77,19 @@ class ExerciseTypeListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ExerciseTypeViewHolder, position: Int) {
+            val exerciseTypeInfo = exerciseTypeInfo[position]
             with(holder) {
-                exerciseNameTextView.text = exerciseTypeInfo[position].exerciseType.name
-
-                val typeId = exerciseTypeInfo[position].exerciseType.id
+                exerciseNameTextView.text = exerciseTypeInfo.exerciseType.name
+                maxWeightTextView.text =
+                    resources.getString(
+                        R.string.exercise_type_list_max_weight,
+                        exerciseTypeInfo.exercises.maxWeight().toString()
+                    )
+                oneRepMaxTextView.text = resources.getString(
+                    R.string.exercise_type_list_one_rep_max,
+                    exerciseTypeInfo.exercises.oneRepMax(BasicOneRepMaxCalculator()).toInt().toString()
+                )
+                val typeId = exerciseTypeInfo.exerciseType.id
                 chartBtn.setOnClickListener {
                     val action = ExerciseTypeListFragmentDirections.actionTypesToCharts(typeId)
                     findNavController().navigate(action)
@@ -88,7 +99,8 @@ class ExerciseTypeListFragment : Fragment() {
                     findNavController().navigate(action)
                 }
                 addExerciseBtn.setOnClickListener {
-                    val action = ExerciseTypeListFragmentDirections.actionTypesToCreateTraining(typeId)
+                    val action =
+                        ExerciseTypeListFragmentDirections.actionTypesToCreateTraining(typeId)
                     findNavController().navigate(action)
                 }
             }
@@ -102,6 +114,8 @@ class ExerciseTypeListFragment : Fragment() {
     class ExerciseTypeViewHolder(
         val cardView: CardView,
         val exerciseNameTextView: TextView,
+        val maxWeightTextView: TextView,
+        val oneRepMaxTextView: TextView,
         val chartBtn: ImageButton,
         val overViewBtn: ImageButton,
         val addExerciseBtn: ImageButton

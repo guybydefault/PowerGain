@@ -13,17 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.guybydefault.powergain.PowerGainApplication
 import ru.guybydefault.powergain.R
-import ru.guybydefault.powergain.viewmodel.TrainingsViewModel
+import ru.guybydefault.powergain.container
 import ru.guybydefault.powergain.databinding.FragmentExerciseTrainingsBinding
 import ru.guybydefault.powergain.databinding.TrainingCardViewBinding
 
 import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.serializer.TrainingExerciseSerializer
+import ru.guybydefault.powergain.viewmodel.ExercisesViewModel
+import java.time.format.DateTimeFormatter
 
 class ExerciseTrainingsFragment() : Fragment() {
 
     private lateinit var binding: FragmentExerciseTrainingsBinding
-    private lateinit var viewModel: TrainingsViewModel
+    private lateinit var viewModel: ExercisesViewModel
     private lateinit var adapter: TrainingViewHolderAdapter
 
     private val args: ExerciseTrainingsFragmentArgs by navArgs()
@@ -31,14 +33,8 @@ class ExerciseTrainingsFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = TrainingViewHolderAdapter()
-        viewModel =
-            (requireActivity().application as PowerGainApplication).container.trainingsViewModel
+        viewModel = container().exercisesViewModel
         viewModel.exerciseTypeId = args.exerciseTypeId
-        viewModel.exercises.observe(this) { trainings ->
-            adapter.exercises = trainings
-            updateTrainingsCount(trainings.size)
-            adapter.notifyDataSetChanged()
-        }
     }
 
     override fun onCreateView(
@@ -61,12 +57,22 @@ class ExerciseTrainingsFragment() : Fragment() {
                 ExerciseTrainingsFragmentDirections.actionTrainingsToChart(args.exerciseTypeId)
             findNavController().navigate(action)
         }
+        viewModel.trainingExercises.observe(viewLifecycleOwner) { trainings ->
+            adapter.exercises = trainings
+            setExerciseTypeName(viewModel.exerciseType.name)
+            updateTrainingsCount(trainings.size)
+            adapter.notifyDataSetChanged()
+        }
         return binding.root
     }
 
     private fun updateTrainingsCount(size: Int) {
         binding.exerciseCount.text =
             "${resources.getString(R.string.fragment_trainings_count)} ${size}"
+    }
+
+    private fun setExerciseTypeName(name: String) {
+        binding.exerciseTypeName.text = name
     }
 
     class TrainingViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {
@@ -86,7 +92,7 @@ class ExerciseTrainingsFragment() : Fragment() {
 
         override fun onBindViewHolder(holder: ExerciseTypeViewHolder, position: Int) {
             val training = exercises[position]
-            holder.date.text = training.date.toString()
+            holder.date.text = training.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             holder.trainingDesc.text = serializer.serialize(training)
         }
 

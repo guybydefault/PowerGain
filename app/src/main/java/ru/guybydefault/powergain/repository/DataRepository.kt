@@ -1,42 +1,56 @@
 package ru.guybydefault.powergain.repository
 
+import kotlinx.coroutines.*
+import ru.guybydefault.powergain.PowerGainApplication
+import ru.guybydefault.powergain.R
 import ru.guybydefault.powergain.model.ExerciseType
 import ru.guybydefault.powergain.model.ExerciseTypeInfo
 import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.parser.Parser
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.lang.IllegalArgumentException
 
-class DataRepository(inputStream: InputStream) {
-    private val _exercises: MutableList<TrainingExercise>
+class DataRepository(val application: PowerGainApplication, val coroutineScope: CoroutineScope) {
+    companion object {
+        val DATA_FILE_NAME = "data.txt"
+    }
+
+    private lateinit var _exercises: MutableList<TrainingExercise>
     val exercises: List<TrainingExercise>
         get() = _exercises
 
-    private val _trainingExercisesByType: MutableMap<ExerciseType, MutableList<TrainingExercise>>
+    private lateinit var _trainingExercisesByType: MutableMap<ExerciseType, MutableList<TrainingExercise>>
     val trainingExercisesByType: Map<ExerciseType, List<TrainingExercise>>
         get() = _trainingExercisesByType
 
-    private val _trainExercisesTypes: MutableList<ExerciseTypeInfo>
+    private lateinit var _trainExercisesTypes: MutableList<ExerciseTypeInfo>
     val trainExercisesTypes: List<ExerciseTypeInfo>
         get() = _trainExercisesTypes
 
-
     init {
-        val parser = Parser(BufferedReader(InputStreamReader(inputStream)))
-        _exercises = parser.parse()
-
-        _trainingExercisesByType = initByType()
-        _trainExercisesTypes = initTypeInfo()
+//        COPY from resources
+//        val input = application.resources.openRawResource(
+//            R.raw.training_import
+//        ).readBytes()
+//        val fileOutput = File(application.filesDir.absolutePath + "/data.txt")
+//        FileOutputStream(fileOutput).use {
+//            it.write(input)
+//        }
+        runBlocking(coroutineScope.coroutineContext) {
+            load()
+        }
     }
 
-    fun getTrainingsByType(typeId: Int): List<TrainingExercise> {
+    fun getExerciseType(typeId: Int): ExerciseType {
         val type = trainingExercisesByType.keys.find { type -> type.id == typeId }
         if (type == null) {
             throw IllegalArgumentException()
         }
-        return trainingExercisesByType[type]!!
+        return type
+    }
+
+    fun getTrainingsByType(typeId: Int): List<TrainingExercise> {
+        return trainingExercisesByType[getExerciseType(typeId)]!!
     }
 
     fun searchTypesByStr(str: String): List<ExerciseTypeInfo> {
@@ -52,6 +66,28 @@ class DataRepository(inputStream: InputStream) {
             )
         }.thenByDescending { it.exercises.size }
         )
+    }
+
+
+    suspend fun load() {
+        _exercises = loadFromFile()
+
+        _trainingExercisesByType = initByType()
+        _trainExercisesTypes = initTypeInfo()
+    }
+
+    private suspend fun loadFromFile(): MutableList<TrainingExercise> {
+        return coroutineScope {
+            async(Dispatchers.IO) {
+                val dataFile = File("${application.filesDir}/$DATA_FILE_NAME")
+                if (dataFile.exists() && dataFile.isFile) {
+                    return@async Parser(dataFile).parse()
+                } else {
+                    dataFile.createNewFile()
+                    return@async mutableListOf<TrainingExercise>()
+                }
+            }.await()
+        }
     }
 
     private fun initByType(): MutableMap<ExerciseType, MutableList<TrainingExercise>> {

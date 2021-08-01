@@ -1,25 +1,22 @@
 package ru.guybydefault.powergain.model
 
+import java.time.Instant
+
 data class TrainingSet(
     /**
      * Kilograms
      */
     val weight: Double,
-    val repetitions: Int,
-    /**
-     * Rest time in seconds before next set
-     */
-    val rest: Int?
-
+    val repetitions: Int
 ) {
 
-    val volume : Double
+    val volume: Double
         get() = weight * repetitions
 
     fun multiply(times: Int): List<TrainingSet> {
         val list = mutableListOf<TrainingSet>()
         for (i in 0..times) {
-            list.add(copy(weight, repetitions, rest))
+            list.add(copy(weight, repetitions))
         }
         return list
     }

@@ -2,10 +2,14 @@
     <string name="app_name">PowerGain</string>
     <string name="action_settings">Settings</string>
     <string name="exercise_type_list_search_hint">Поиск по упражнениям</string>
+    <string name="exercise_type_list_max_weight">Максимальный вес: %sкг</string>
+    <string name="exercise_type_list_one_rep_max">Расчетный 1ПМ: %sкг</string>
     <string name="fragment_name_progress">Прогресс</string>
     <string name="fragment_name_trainings">Тренировки</string>
     <string name="fragment_name_exercise_types">Упражнения</string>
     <string name="fragment_name_create_exercise_type">Добавить упражнение</string>
     <string name="fragment_name_create_training">Добавить тренировку</string>
     <string name="fragment_trainings_count">Количество тренировок:</string>
+    <string name="fragment_create_type_name">Название упражнения</string>
+    <string name="fragment_create_type_submit">Добавить</string>
 </resources>

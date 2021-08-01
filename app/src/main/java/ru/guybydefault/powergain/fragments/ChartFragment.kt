@@ -1,62 +1,91 @@
 package ru.guybydefault.powergain.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.highlight.Highlight
 import ru.guybydefault.powergain.PowerGainApplication
+import ru.guybydefault.powergain.container
 import ru.guybydefault.powergain.databinding.FragmentChartBinding
 import ru.guybydefault.powergain.model.TrainingExercise
-import kotlin.random.Random
+import ru.guybydefault.powergain.onChartValueSelectedListener
+import ru.guybydefault.powergain.serializer.TrainingExerciseSerializer
+import ru.guybydefault.powergain.viewmodel.ChartViewModel
 
 
-class ChartFragment : Fragment() {
+class ChartFragment() : Fragment() {
 
     private lateinit var binding: FragmentChartBinding
     private val args: ChartFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var viewModel: ChartViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = container().chartViewModel
         binding = FragmentChartBinding.inflate(inflater, container, false)
         val exercises =
-            (requireActivity().application as PowerGainApplication).container.dataRepository.getTrainingsByType(args.exerciseTypeId)
-        setupCombinedChart(
-            binding.combinedChart,
-            exercises
+            (requireActivity().application as PowerGainApplication).container.dataRepository.getTrainingsByType(
+                args.exerciseTypeId
+            )
+
+
+        val arr = arrayOf("Интенсивность", "Тоннаж", "Макс. вес", "1ПМ (расчетный)")
+        binding.chartSelectionSpinner.adapter = ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            arr
         )
+
+        binding.chartSelectionSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    Toast.makeText(requireContext(), "Hey ${arr[position]}", Toast.LENGTH_LONG)
+                        .show()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+
+        viewModel.highlightedTraining.observe(viewLifecycleOwner, { training ->
+            binding.trainingInfoTextView.text =
+                training.date.toString() + " " + serializer.serialize(training)
+        })
         setupLineChart(binding.lineChart, exercises)
+
         return binding.root
     }
 
-    private fun setupCombinedChart(chart: CombinedChart, exercises: List<TrainingExercise>) {
-        val combinedData = CombinedData()
-        combinedData.setData(generateLineData(exercises))
-        combinedData.setData(generateBarData())
-        chart.data = combinedData
-        chart.invalidate()
-    }
+    val serializer = TrainingExerciseSerializer()
 
     private fun setupLineChart(chart: LineChart, trainings: List<TrainingExercise>) {
         val lineData = generateLineData(trainings)
         chart.data = lineData
+
+        chart.onChartValueSelectedListener({ e: Entry?, h: Highlight? ->
+            viewModel.highlightedTraining.postValue(e!!.data as TrainingExercise)
+        })
+
         chart.invalidate()
     }
 
-    val count = 12
+
     private fun generateLineData(trainings: List<TrainingExercise>): LineData? {
         val data = LineData()
         val maxWeightEntries: ArrayList<Entry> = ArrayList()
@@ -68,10 +97,10 @@ class ChartFragment : Fragment() {
                     training.maxWeight.toFloat()
                 )
             )
-            intensityEntries.add(Entry(index + 0.5f, training.intensity.toFloat()))
+            intensityEntries.add(Entry(index + 0.5f, training.intensity.toFloat(), training))
         }
-        val maxWeightSet = LineDataSet(maxWeightEntries, "Max Weight (kg)")
         val intensitySet = LineDataSet(intensityEntries, "Intensity (volume / reps)")
+        //        val maxWeightSet = LineDataSet(maxWeightEntries, "Max Weight (kg)")
 //        maxWeightSet.color = Color.rgb(240, 238, 70)
 //        maxWeightSet.lineWidth = 2.5f
 //        maxWeightSet.setCircleColor(Color.rgb(240, 238, 70))
@@ -87,44 +116,4 @@ class ChartFragment : Fragment() {
         return data
     }
 
-
-    private fun generateBarData(): BarData? {
-        val entries1: ArrayList<BarEntry> = ArrayList()
-        val entries2: ArrayList<BarEntry> = ArrayList()
-        for (index in 0 until count) {
-            entries1.add(BarEntry(0f, Random(0).nextInt(0, 25).toFloat()))
-
-            // stacked
-            entries2.add(
-                BarEntry(
-                    0f,
-                    floatArrayOf(
-                        Random(0).nextInt(12, 15).toFloat(),
-                        Random(0).nextInt(12, 15).toFloat()
-                    )
-                )
-            )
-        }
-        val set1 = BarDataSet(entries1, "Bar 1")
-        set1.color = Color.rgb(60, 220, 78)
-        set1.valueTextColor = Color.rgb(60, 220, 78)
-        set1.valueTextSize = 10f
-        set1.axisDependency = YAxis.AxisDependency.LEFT
-        val set2 = BarDataSet(entries2, "")
-        set2.stackLabels = arrayOf("Stack 1", "Stack 2")
-        set2.setColors(Color.rgb(61, 165, 255), Color.rgb(23, 197, 255))
-        set2.valueTextColor = Color.rgb(61, 165, 255)
-        set2.valueTextSize = 10f
-        set2.axisDependency = YAxis.AxisDependency.LEFT
-        val groupSpace = 0.06f
-        val barSpace = 0.02f // x2 dataset
-        val barWidth = 0.45f // x2 dataset
-        // (0.45 + 0.02) * 2 + 0.06 = 1.00 -> interval per "group"
-        val d = BarData(set1, set2)
-        d.barWidth = barWidth
-
-        // make this BarData object grouped
-        d.groupBars(0f, groupSpace, barSpace) // start at x = 0
-        return d
-    }
 }
