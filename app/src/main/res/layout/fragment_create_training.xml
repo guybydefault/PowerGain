@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="ru.guybydefault.powergain.viewmodel.CreateTrainingViewModel" />
     </data>
 
-    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragments.CreateTrainingFragment">
@@ -16,7 +18,17 @@
             android:id="@+id/exercise_type_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@{viewModel.exerciseType.name}"/>
+            android:text="@{viewModel.exerciseType.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/sets_list"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="100dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -23,6 +23,8 @@ class Parser(file: File) {
     private var currDay by Delegates.notNull<Int>()
     private var currMonth by Delegates.notNull<Int>()
 
+    private var exerciseCount = 0
+
     companion object {
         val NEW_LINE_SEP = ','
         val ESCAPE_SYMBOLS = charArrayOf('\n', ' ', '\r', NEW_LINE_SEP)
@@ -127,9 +129,8 @@ class Parser(file: File) {
     private fun getExerciseType(exerciseName: String): ExerciseType {
         var trainingType = mapTrainingTypes[exerciseName]
         if (trainingType == null) {
-            trainingType = ExerciseType(typeCount, exerciseName)
+            trainingType = ExerciseType(typeCount++, exerciseName, mutableListOf())
             mapTrainingTypes[exerciseName] = trainingType
-            typeCount++
         }
         return trainingType
     }
@@ -138,11 +139,11 @@ class Parser(file: File) {
         val exerciseName = parseExerciseName()
         val trainingSets = mutableListOf<TrainingSet>()
         val exercise = TrainingExercise(
+            exerciseCount++,
             getExerciseType(exerciseName),
-            trainingSets,
-            null,
             LocalDate.of(currYear, currMonth, currDay),
-            null
+            null,
+            trainingSets
         )
         var weight = 0.0
         var weightSet = false
@@ -174,17 +175,15 @@ class Parser(file: File) {
                     weightSet = true
                 }
                 else -> {
-                    if (trainingSets.isEmpty()) {
-                        throw ParserException("Training sets is empty ${currToken}")
-                    }
-                    return exercise
+                    break
                 }
             }
             nextToken()
         }
         if (exercise.sets.isEmpty()) {
-            throw ParserException("Can't parse exercise")
+            throw ParserException("Training sets is empty ${currToken}")
         } else {
+            exercise.type.exercises.add(exercise)
             return exercise
         }
     }
@@ -204,9 +203,10 @@ class Parser(file: File) {
 
     }
 
-    fun parse(): MutableList<TrainingExercise> {
+    fun parse(): MutableList<ExerciseType> {
         try {
-            return parseTrainings()
+            parseTrainings()
+            return mapTrainingTypes.values.toMutableList()
         } catch (e: ParserException) {
             throw IllegalStateException(e.message!! + " at line " + getLinesCount(), e)
         } catch (e: Exception) {

@@ -1,15 +1,13 @@
 package ru.guybydefault.powergain.model
 
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZonedDateTime
 
 data class TrainingExercise(
+    val id: Int,
     val type: ExerciseType,
-    val sets: List<TrainingSet>,
-    val time: LocalTime?,
     val date: LocalDate,
-    val comment: String?
+    val comment: String?,
+    val sets: List<TrainingSet>
 ) {
     val maxWeight: Double
         get() = sets.maxOf { set -> set.weight }
@@ -22,4 +20,5 @@ data class TrainingExercise(
 
     val intensity: Double
         get() = volume / repetitions
+
 }

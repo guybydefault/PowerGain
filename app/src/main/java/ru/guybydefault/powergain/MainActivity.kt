@@ -12,26 +12,6 @@ import ru.guybydefault.powergain.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    /**
-     * TODO
-     * Create training
-     * Create training type
-     * Move recycler view to top (now it is being centered on the screen vertically)
-     * Add date selection
-     * DONE Add chart button to trainings list
-     * Resize SearchTextView
-     * Show date while moving through the trainings dynamics chart
-     * Show 2 last trainings info on ExerciseTypeCard in exercise type list
-     * Add database storage
-     * Add import/export
-     * Add diary sharing
-     * Show date of training when hovering over chart marker in training graph
-     * Setting custom 1RM formulas for each of the exercise types
-     * Create app icon and description
-     * Internationalize (Eng + Rus)
-     * Publish in PlayMarket
-     */
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 

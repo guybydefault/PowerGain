@@ -79,7 +79,7 @@ class ChartFragment() : Fragment() {
         chart.data = lineData
 
         chart.onChartValueSelectedListener({ e: Entry?, h: Highlight? ->
-            viewModel.highlightedTraining.postValue(e!!.data as TrainingExercise)
+            viewModel.highlightedTraining.setValue(e!!.data as TrainingExercise)
         })
 
         chart.invalidate()

@@ -4,7 +4,6 @@ import kotlinx.coroutines.*
 import ru.guybydefault.powergain.PowerGainApplication
 import ru.guybydefault.powergain.R
 import ru.guybydefault.powergain.model.ExerciseType
-import ru.guybydefault.powergain.model.ExerciseTypeInfo
 import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.parser.Parser
 import java.io.*
@@ -19,30 +18,26 @@ class DataRepository(val application: PowerGainApplication, val coroutineScope: 
     val exercises: List<TrainingExercise>
         get() = _exercises
 
-    private lateinit var _trainingExercisesByType: MutableMap<ExerciseType, MutableList<TrainingExercise>>
-    val trainingExercisesByType: Map<ExerciseType, List<TrainingExercise>>
-        get() = _trainingExercisesByType
-
-    private lateinit var _trainExercisesTypes: MutableList<ExerciseTypeInfo>
-    val trainExercisesTypes: List<ExerciseTypeInfo>
+    private lateinit var _trainExercisesTypes: MutableList<ExerciseType>
+    val trainExercisesTypes: List<ExerciseType>
         get() = _trainExercisesTypes
 
     init {
 //        COPY from resources
-//        val input = application.resources.openRawResource(
-//            R.raw.training_import
-//        ).readBytes()
-//        val fileOutput = File(application.filesDir.absolutePath + "/data.txt")
-//        FileOutputStream(fileOutput).use {
-//            it.write(input)
-//        }
+        val input = application.resources.openRawResource(
+            R.raw.training_import
+        ).readBytes()
+        val fileOutput = File(application.filesDir.absolutePath + "/data.txt")
+        FileOutputStream(fileOutput).use {
+            it.write(input)
+        }
         runBlocking(coroutineScope.coroutineContext) {
             load()
         }
     }
 
     fun getExerciseType(typeId: Int): ExerciseType {
-        val type = trainingExercisesByType.keys.find { type -> type.id == typeId }
+        val type = trainExercisesTypes.find { type -> type.id == typeId }
         if (type == null) {
             throw IllegalArgumentException()
         }
@@ -50,17 +45,17 @@ class DataRepository(val application: PowerGainApplication, val coroutineScope: 
     }
 
     fun getTrainingsByType(typeId: Int): List<TrainingExercise> {
-        return trainingExercisesByType[getExerciseType(typeId)]!!
+        return getExerciseType(typeId)!!.exercises
     }
 
-    fun searchTypesByStr(str: String): List<ExerciseTypeInfo> {
+    fun searchTypesByStr(str: String): List<ExerciseType> {
         return trainExercisesTypes.filter {
-            it.exerciseType.name.contains(
+            it.name.contains(
                 str,
                 ignoreCase = true
             )
-        }.sortedWith(compareByDescending<ExerciseTypeInfo> {
-            it.exerciseType.name.startsWith(
+        }.sortedWith(compareByDescending<ExerciseType> {
+            it.name.startsWith(
                 str,
                 ignoreCase = true
             )
@@ -70,13 +65,12 @@ class DataRepository(val application: PowerGainApplication, val coroutineScope: 
 
 
     suspend fun load() {
-        _exercises = loadFromFile()
+        _exercises = loadFromFile().flatMap { it.exercises }.toMutableList()
 
-        _trainingExercisesByType = initByType()
-        _trainExercisesTypes = initTypeInfo()
+        _trainExercisesTypes = initTypeInfo(_exercises)
     }
 
-    private suspend fun loadFromFile(): MutableList<TrainingExercise> {
+    private suspend fun loadFromFile(): MutableList<ExerciseType> {
         return coroutineScope {
             async(Dispatchers.IO) {
                 val dataFile = File("${application.filesDir}/$DATA_FILE_NAME")
@@ -84,7 +78,7 @@ class DataRepository(val application: PowerGainApplication, val coroutineScope: 
                     return@async Parser(dataFile).parse()
                 } else {
                     dataFile.createNewFile()
-                    return@async mutableListOf<TrainingExercise>()
+                    return@async mutableListOf<ExerciseType>()
                 }
             }.await()
         }
@@ -102,11 +96,11 @@ class DataRepository(val application: PowerGainApplication, val coroutineScope: 
         return exercisesMap
     }
 
-    private fun initTypeInfo(): MutableList<ExerciseTypeInfo> {
-        val trainingExercisesTypes = mutableListOf<ExerciseTypeInfo>()
-        for ((key, exercises) in trainingExercisesByType) {
-            trainingExercisesTypes.add(ExerciseTypeInfo(key, exercises))
+    private fun initTypeInfo(trainings: List<TrainingExercise>): MutableList<ExerciseType> {
+        val trainingExercisesTypes = mutableSetOf<ExerciseType>()
+        for (training in trainings) {
+            trainingExercisesTypes.add(training.type)
         }
-        return trainingExercisesTypes
+        return trainingExercisesTypes.toMutableList()
     }
 }
