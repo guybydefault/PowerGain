@@ -4,26 +4,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.guybydefault.powergain.model.ExerciseType
 import ru.guybydefault.powergain.model.TrainingSet
-import ru.guybydefault.powergain.repository.DataRepository
+import ru.guybydefault.powergain.repository.TrainingsService
 
-class CreateTrainingViewModel(val dataRepository: DataRepository) : ViewModel() {
+class CreateTrainingViewModel(val trainingsService: TrainingsService) : ViewModel() {
     val trainingSets = MutableLiveData<MutableList<TrainingSet>>()
 
     val exerciseType = MutableLiveData<ExerciseType>()
         get() {
             return field
         }
-    var exerciseTypeId: Int = -1
-        set(value) {
-            field = value
-            exerciseType.value = dataRepository.getExerciseType(value)
-            initSets()
-        }
 
-    private fun initSets() {
+    fun setupViewModelForExerciseType(exerciseTypeId: Int) {
+        exerciseType.value = trainingsService.getExerciseType(exerciseTypeId)
+        initTrainingSets()
+    }
+
+    private fun initTrainingSets() {
         trainingSets.value = mutableListOf()
         /** Init by previous training */
-        val prev = dataRepository.getTrainingsByType(exerciseTypeId).maxByOrNull { e -> e.date }
+        val prev =
+            trainingsService.getTrainingsByType(exerciseType.value!!.id).maxByOrNull { e -> e.date }
         if (prev != null) {
             val sets = trainingSets.value!!
             sets.add(TrainingSet(prev.sets[0].weight, 0))

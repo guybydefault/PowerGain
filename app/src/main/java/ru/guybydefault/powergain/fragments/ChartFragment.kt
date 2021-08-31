@@ -35,7 +35,7 @@ class ChartFragment() : Fragment() {
         viewModel = container().chartViewModel
         binding = FragmentChartBinding.inflate(inflater, container, false)
         val exercises =
-            (requireActivity().application as PowerGainApplication).container.dataRepository.getTrainingsByType(
+            (requireActivity().application as PowerGainApplication).container.trainingsRepository.getTrainingsByType(
                 args.exerciseTypeId
             )
 

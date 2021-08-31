@@ -1,10 +1,9 @@
 package ru.guybydefault.powergain
 
-import androidx.room.Database
 import androidx.room.Room
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import ru.guybydefault.powergain.repository.DataRepository
+import ru.guybydefault.powergain.repository.TrainingsService
 import ru.guybydefault.powergain.viewmodel.ChartViewModel
 import ru.guybydefault.powergain.viewmodel.CreateTrainingTypeViewModel
 import ru.guybydefault.powergain.viewmodel.CreateTrainingViewModel
@@ -13,8 +12,8 @@ import ru.guybydefault.powergain.viewmodel.ExercisesViewModel
 class PowerGainContainer(val application: PowerGainApplication) {
     val scope = CoroutineScope(SupervisorJob())
 
-    val dataRepository: DataRepository by lazy {
-        DataRepository(application, scope)
+    val trainingsRepository: TrainingsService by lazy {
+        TrainingsService(application, scope)
     }
 
     val db = Room.databaseBuilder(
@@ -23,8 +22,8 @@ class PowerGainContainer(val application: PowerGainApplication) {
         "power-gain-db"
     ).build()
 
-    val exercisesViewModel = ExercisesViewModel(dataRepository)
-    val createTrainingTypeViewModel = CreateTrainingTypeViewModel(dataRepository)
-    val createTrainingViewModel = CreateTrainingViewModel(dataRepository)
-    val chartViewModel = ChartViewModel(dataRepository)
+    val exercisesViewModel = ExercisesViewModel(trainingsRepository)
+    val createTrainingTypeViewModel = CreateTrainingTypeViewModel(trainingsRepository)
+    val createTrainingViewModel = CreateTrainingViewModel(trainingsRepository)
+    val chartViewModel = ChartViewModel(trainingsRepository)
 }

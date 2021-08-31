@@ -9,7 +9,7 @@ import ru.guybydefault.powergain.parser.Parser
 import java.io.*
 import java.lang.IllegalArgumentException
 
-class DataRepository(val application: PowerGainApplication, val coroutineScope: CoroutineScope) {
+class TrainingsService(val application: PowerGainApplication, val coroutineScope: CoroutineScope) {
     companion object {
         val DATA_FILE_NAME = "data.txt"
     }

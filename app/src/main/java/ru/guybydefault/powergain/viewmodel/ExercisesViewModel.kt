@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.guybydefault.powergain.model.ExerciseType
 import ru.guybydefault.powergain.model.TrainingExercise
-import ru.guybydefault.powergain.repository.DataRepository
+import ru.guybydefault.powergain.repository.TrainingsService
 
-class ExercisesViewModel(val dataRepository: DataRepository) : ViewModel() {
+class ExercisesViewModel(val trainingsRepository: TrainingsService) : ViewModel() {
 
     val exercises: MutableLiveData<List<ExerciseType>> = MutableLiveData()
 
@@ -15,9 +15,9 @@ class ExercisesViewModel(val dataRepository: DataRepository) : ViewModel() {
     var exerciseTypeId: Int = -1
         set(value) {
             field = value
-            exerciseType = dataRepository.getExerciseType(value)
+            exerciseType = trainingsRepository.getExerciseType(value)
             trainingExercises.setValue(
-                dataRepository.getTrainingsByType(exerciseTypeId).sortedByDescending { it.date })
+                trainingsRepository.getTrainingsByType(exerciseTypeId).sortedByDescending { it.date })
         }
 
     init {
@@ -26,10 +26,10 @@ class ExercisesViewModel(val dataRepository: DataRepository) : ViewModel() {
 
     //TODO onPeriodChange re-init exercises list & trainingExercises list
     private fun loadExercisesTypeInfo() {
-        exercises.setValue(dataRepository.searchTypesByStr(""))
+        exercises.setValue(trainingsRepository.searchTypesByStr(""))
     }
 
     fun searchExercises(str: String) {
-        exercises.setValue(dataRepository.searchTypesByStr(str))
+        exercises.setValue(trainingsRepository.searchTypesByStr(str))
     }
 }

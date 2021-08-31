@@ -1,8 +1,8 @@
 package ru.guybydefault.powergain.viewmodel
 
 import androidx.lifecycle.ViewModel
-import ru.guybydefault.powergain.repository.DataRepository
+import ru.guybydefault.powergain.repository.TrainingsService
 
 
-class CreateTrainingTypeViewModel(val dataRepository: DataRepository) : ViewModel() {
+class CreateTrainingTypeViewModel(val trainingsRepository: TrainingsService) : ViewModel() {
 }

@@ -1,16 +1,16 @@
 package ru.guybydefault.powergain.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import ru.guybydefault.powergain.viewmodel.CreateTrainingViewModel
 import ru.guybydefault.powergain.container
 import ru.guybydefault.powergain.databinding.FragmentCreateTrainingBinding
 import ru.guybydefault.powergain.databinding.TrainingSetCardBinding
 import ru.guybydefault.powergain.model.TrainingSet
+import ru.guybydefault.powergain.viewmodel.CreateTrainingViewModel
 
 class CreateTrainingFragment : Fragment() {
 
@@ -21,7 +21,7 @@ class CreateTrainingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = container().createTrainingViewModel
-        viewModel.exerciseTypeId = args.exerciseTypeId
+        viewModel.setupViewModelForExerciseType(args.exerciseTypeId)
     }
 
     override fun onCreateView(
@@ -32,12 +32,12 @@ class CreateTrainingFragment : Fragment() {
         binding.viewModel = viewModel
         val view = binding.root
         viewModel.trainingSets.observe(viewLifecycleOwner, { trainingSets ->
-            drawSets(trainingSets)
+            displaySets(trainingSets)
         })
         return view
     }
 
-    private fun drawSets(trainingSets: List<TrainingSet>) {
+    private fun displaySets(trainingSets: List<TrainingSet>) {
         binding.setsList.removeAllViews()
         for (set in trainingSets) {
             val setBinding = TrainingSetCardBinding.inflate(
