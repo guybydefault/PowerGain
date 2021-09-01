@@ -8,7 +8,7 @@ import ru.guybydefault.powergain.model.TrainingExercise
 import ru.guybydefault.powergain.serializer.TrainingExerciseSerializer
 import java.time.format.DateTimeFormatter
 
-class TrainingViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {
+class ExerciseTypeViewHolderAdapter : RecyclerView.Adapter<ExerciseTypeViewHolder>() {
 
     var exercises: List<TrainingExercise> = mutableListOf()
     val serializer = TrainingExerciseSerializer()
