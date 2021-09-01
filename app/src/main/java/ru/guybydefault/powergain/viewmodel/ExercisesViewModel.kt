@@ -10,18 +10,21 @@ class ExercisesViewModel(val trainingsRepository: TrainingsService) : ViewModel(
 
     val exercises: MutableLiveData<List<ExerciseType>> = MutableLiveData()
 
-    lateinit var exerciseType: ExerciseType
     val trainingExercises: MutableLiveData<List<TrainingExercise>> = MutableLiveData()
-    var exerciseTypeId: Int = -1
-        set(value) {
-            field = value
-            exerciseType = trainingsRepository.getExerciseType(value)
-            trainingExercises.setValue(
-                trainingsRepository.getTrainingsByType(exerciseTypeId).sortedByDescending { it.date })
-        }
+
+    lateinit var exerciseType: ExerciseType
+    private var exerciseTypeId: Int = -1
+
 
     init {
         loadExercisesTypeInfo()
+    }
+
+    fun setupViewModel(exerciseTypeId: Int) {
+        this.exerciseTypeId = exerciseTypeId
+        exerciseType = trainingsRepository.getExerciseType(exerciseTypeId)
+        trainingExercises.value =
+            trainingsRepository.getTrainingsByType(exerciseTypeId).sortedByDescending { it.date }
     }
 
     //TODO onPeriodChange re-init exercises list & trainingExercises list
