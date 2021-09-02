@@ -36,6 +36,10 @@ class TrainingsService(val application: PowerGainApplication, val coroutineScope
         }
     }
 
+    fun getTraining(trainingId: Int): TrainingExercise? {
+        return exercises.find { it.id == trainingId }
+    }
+
     fun getExerciseType(typeId: Int): ExerciseType {
         val type = trainExercisesTypes.find { type -> type.id == typeId }
         if (type == null) {

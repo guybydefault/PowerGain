@@ -1,7 +1,5 @@
 package ru.guybydefault.powergain
 
-import android.app.Activity
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText

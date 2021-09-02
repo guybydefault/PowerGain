@@ -27,8 +27,10 @@
             app:layout_constraintTop_toBottomOf="@id/training_date" />
 
         <ImageButton
+            android:id="@+id/edit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="Edit"
             android:src="@drawable/ic_pencil_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

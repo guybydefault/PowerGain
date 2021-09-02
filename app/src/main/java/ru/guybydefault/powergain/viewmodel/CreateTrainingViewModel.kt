@@ -19,14 +19,19 @@ class CreateTrainingViewModel(val trainingsService: TrainingsService) : ViewMode
         initTrainingSets()
     }
 
+    fun setupViewModelForTraining(trainingId: Int) {
+        val training = trainingsService.getTraining(trainingId)!!
+        exerciseType.value = training.type
+        trainingSets.value = training.sets.toMutableList()
+    }
+
     private fun initTrainingSets() {
         trainingSets.value = mutableListOf()
-        /** Init by previous training */
         val prev =
             trainingsService.getTrainingsByType(exerciseType.value!!.id).maxByOrNull { e -> e.date }
         if (prev != null) {
             val sets = trainingSets.value!!
-            sets.add(TrainingSet(prev.sets[0].weight, 0))
+            sets.add(TrainingSet(prev.sets[0].weight, prev.sets[0].repetitions))
             trainingSets.postValue(sets)
         }
     }

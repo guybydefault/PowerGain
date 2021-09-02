@@ -1,4 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="global_padding">5dp</dimen>
+    <dimen name="sets_table_margin_between_col">10dp</dimen>
+    <dimen name="sets_table_row_width">30dp</dimen>
+    <dimen name="recycler_view_bottom_padding">120dp</dimen>
 </resources>

@@ -26,9 +26,9 @@
     </fragment>
     <fragment
         android:id="@+id/ExerciseTrainingsFragment"
-        android:name="ru.guybydefault.powergain.fragments.ExerciseTrainingsFragment"
+        android:name="ru.guybydefault.powergain.fragments.TrainingListFragment"
         android:label="@string/fragment_name_trainings"
-        tools:layout="@layout/fragment_exercise_trainings">
+        tools:layout="@layout/fragment_training_list">
 
         <argument
             android:name="exerciseTypeId"
@@ -60,11 +60,15 @@
     </fragment>
     <fragment
         android:id="@+id/CreateTrainingFragment"
-        android:name="ru.guybydefault.powergain.fragments.CreateTrainingFragment"
+        android:name="ru.guybydefault.powergain.fragments.CreateAndEditTrainingFragment"
         android:label="@string/fragment_name_create_training"
         tools:layout="@layout/fragment_create_training">
         <argument
             android:name="exerciseTypeId"
+            app:argType="integer" />
+        <argument
+            android:name="trainingId"
+            android:defaultValue="-1"
             app:argType="integer" />
     </fragment>
 </navigation>

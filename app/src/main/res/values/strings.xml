@@ -12,4 +12,6 @@
     <string name="fragment_trainings_count">Количество тренировок:</string>
     <string name="fragment_create_type_name">Название упражнения</string>
     <string name="fragment_create_type_submit">Добавить</string>
+    <string name="no_training_sets_placeholder">Тренировочные подходы не добавлены</string>
+    <string name="add_training_set_btn">Добавить</string>
 </resources>
